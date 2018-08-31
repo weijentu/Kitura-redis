@@ -259,6 +259,22 @@ extension Redis {
         }
     }
 
+    /// Return a range of members in a sorted set, by lexicographical range.
+    ///
+    /// - Parameter key: The key.
+    /// - Parameter min: The minimum score to return from the set.
+    /// - Parameter max: The maximum score to return from the set.
+    /// - Parameter offset: The offset specifies the number of elements to skip.
+    /// - Parameter count: The count specifies the number of elements to return from starting at offset.
+    /// - Parameter callback: The callback function, the Array will contain the list of elements
+    ///                       in the specified score range.
+    ///                       NSError will be non-nil if an error occurred.
+    public func zrangebylex(_ key: String, min: String, max: String, offset: Int, count: Int, callback: ([RedisString?]?, NSError?) -> Void) {
+        issueCommand("ZRANGEBYLEX", key, min, max, "LIMIT", "\(offset)", "\(count)") { (response: RedisResponse) in
+            self.redisStringArrayResponseHandler(response, callback: callback)
+        }
+    }
+    
     /// Return a range of members in a sorted set, by score.
     ///
     /// - Parameter key: The key.
